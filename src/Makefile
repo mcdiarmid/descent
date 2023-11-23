@@ -29,7 +29,7 @@
 PLATFORM              ?= PLATFORM_DESKTOP
 
 # Define project variables
-PROJECT_NAME          ?= raylib_game
+PROJECT_NAME          ?= descent
 PROJECT_VERSION       ?= 1.0
 PROJECT_BUILD_PATH    ?= .
 
@@ -400,7 +400,7 @@ endif
 # Define source code object files required
 #------------------------------------------------------------------------------------------------
 PROJECT_SOURCE_FILES ?= \
-    raylib_game.c \
+    $(PROJECT_NAME).c \
     screen_logo.c \
     screen_title.c \
     screen_options.c \
