@@ -59,7 +59,7 @@ int main(void)
 {
     // Initialization
     //---------------------------------------------------------
-    InitWindow(screenWidth, screenHeight, "raylib game template");
+    InitWindow(screenWidth, screenHeight, "descent");
 
     InitAudioDevice();      // Initialize audio device
 
@@ -145,6 +145,13 @@ static void ChangeToScreen(GameScreen screen)
 // Request transition to next screen
 static void TransitionToScreen(GameScreen screen)
 {
+    /*
+    * Call fo this function triggers the following sequence:
+    * 1. UpdateTransition will increment transparency from 0% by 5% per frame
+    * 2. Once transparancy reaches 100%, unload the current screen, initialize the next screen
+    * 3. Decrement transparency by 2% per frame
+    * 4. Once transparency reaches 0%, UpdateTransition will no longer be called on Draw loop
+    */
     onTransition = true;
     transFadeOut = false;
     transFromScreen = currentScreen;
@@ -227,6 +234,7 @@ static void UpdateDrawFrame(void)
             case LOGO:
             {
                 UpdateLogoScreen();
+                PauseMusicStream(music);  // Silent logo screen
 
                 if (FinishLogoScreen()) TransitionToScreen(TITLE);
 
@@ -234,6 +242,7 @@ static void UpdateDrawFrame(void)
             case TITLE:
             {
                 UpdateTitleScreen();
+                ResumeMusicStream(music);
 
                 if (FinishTitleScreen() == 1) TransitionToScreen(OPTIONS);
                 else if (FinishTitleScreen() == 2) TransitionToScreen(GAMEPLAY);
@@ -251,7 +260,6 @@ static void UpdateDrawFrame(void)
                 UpdateGameplayScreen();
 
                 if (FinishGameplayScreen() == 1) TransitionToScreen(ENDING);
-                //else if (FinishGameplayScreen() == 2) TransitionToScreen(TITLE);
 
             } break;
             case ENDING:
@@ -266,7 +274,6 @@ static void UpdateDrawFrame(void)
     }
     else UpdateTransition();    // Update transition (fade-in, fade-out)
     //----------------------------------------------------------------------------------
-
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
@@ -286,7 +293,7 @@ static void UpdateDrawFrame(void)
         // Draw full screen rectangle in front of everything
         if (onTransition) DrawTransition();
 
-        //DrawFPS(10, 10);
+        DrawFPS(screenWidth-100, 10);
 
     EndDrawing();
     //----------------------------------------------------------------------------------
