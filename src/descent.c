@@ -44,13 +44,23 @@ static GameScreen transToScreen = UNKNOWN;
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
-static void ChangeToScreen(int screen);     // Change to screen, no transition effect
-
-static void TransitionToScreen(int screen); // Request transition to next screen
+static void ChangeToScreen(GameScreen screen);     // Change to screen, no transition effect
+static void TransitionToScreen(GameScreen screen); // Request transition to next screen
 static void UpdateTransition(void);         // Update transition effect
 static void DrawTransition(void);           // Draw transition effect (full-screen rectangle)
-
 static void UpdateDrawFrame(void);          // Update and draw one frame
+
+
+enum button_e {
+    UP = '^',
+    DOWN = 'v',
+};
+
+
+typedef struct node {
+    int val;
+    struct node * next;
+} node_t;
 
 //----------------------------------------------------------------------------------
 // Main entry point
@@ -266,7 +276,7 @@ static void UpdateDrawFrame(void)
             {
                 UpdateEndingScreen();
 
-                if (FinishEndingScreen() == 1) TransitionToScreen(TITLE);
+                if (FinishEndingScreen() == 1) ChangeToScreen(TITLE);
 
             } break;
             default: break;
